@@ -22,4 +22,13 @@ public class ArraysCompareTest {
     Arrays.sort(numbers);
   }
 
+  @Test(timeout = 100)
+  public void testArraySort_Performance() {
+    final int[] array = { 13, 7, 20, 5 };
+    for (int i = 0; i < 1000000; i++) {
+      array[0] = i;
+      Arrays.sort(array);
+    }
+  }
+
 }
