@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import com.in28minutes.data.api.TodoService;
 
@@ -71,6 +73,24 @@ public class TodoBusinessImplMockTest {
 
     // then
     assertThat(springTodos.size(), is(0));
+  }
+
+  @Test
+  public void testDeleteTodosNotRelatingToSpring_usingBDD() {
+    final List<String> allTodos = Arrays.asList("Learn Spring MVC", "Learn Spring", "Learn Unit Test");
+
+    // given
+    given(todoServiceMock.retrieveTodos("DummyUser")).willReturn(allTodos);
+
+    // when
+    todoBusinessImpl.deleteTodosNotRelatingToSpring("DummyUser");
+
+    // then
+    verify(todoServiceMock).deleteTodo("Learn Unit Test");
+//    verify(todoServiceMock, Mockito.times(1)).deleteTodo("Learn Unit Test");
+//    verify(todoServiceMock, Mockito.atLeastOnce()).deleteTodo("Learn Unit Test");
+    verify(todoServiceMock, Mockito.never()).deleteTodo("Learn Spring MVC");
+
   }
 
 }
