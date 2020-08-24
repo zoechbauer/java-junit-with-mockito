@@ -4,7 +4,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -91,6 +93,23 @@ public class TodoBusinessImplMockTest {
 //    verify(todoServiceMock, Mockito.atLeastOnce()).deleteTodo("Learn Unit Test");
     verify(todoServiceMock, Mockito.never()).deleteTodo("Learn Spring MVC");
 
+  }
+
+  @Test
+  public void testDeleteTodosNotRelatingToSpring_usingBDD_then_insteadOf_verify() {
+    final List<String> allTodos = Arrays.asList("Learn Spring MVC", "Learn Spring", "Learn Unit Test");
+
+    // given
+    given(todoServiceMock.retrieveTodos("DummyUser")).willReturn(allTodos);
+
+    // when
+    todoBusinessImpl.deleteTodosNotRelatingToSpring("DummyUser");
+
+    // then
+    then(todoServiceMock).should().deleteTodo("Learn Unit Test");
+//    then(todoServiceMock).should(times(1)).deleteTodo("Learn Unit Test");
+//    then(todoServiceMock).should(atLeast(5)).deleteTodo("Learn Unit Test");
+    then(todoServiceMock).should(never()).deleteTodo("Learn Spring MVC");
   }
 
 }
