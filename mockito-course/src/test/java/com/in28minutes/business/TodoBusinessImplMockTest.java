@@ -7,6 +7,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -129,6 +130,27 @@ public class TodoBusinessImplMockTest {
     then(todoServiceMock).should().deleteTodo(stringArgumentCaptor.capture());
 
     assertThat(stringArgumentCaptor.getValue(), is("Learn Unit Test"));
+  }
+
+  @Test
+  public void testDeleteTodosNotRelatingToSpring_usingBDD_argumentCapture_calledMultipleTimes() {
+    final ArgumentCaptor<String> stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
+
+    final List<String> allTodos = Arrays.asList("Learn Java", "Learn Spring", "Learn Unit Test");
+
+    // given
+    given(todoServiceMock.retrieveTodos("DummyUser")).willReturn(allTodos);
+
+    // when
+    todoBusinessImpl.deleteTodosNotRelatingToSpring("DummyUser");
+
+    // then
+    then(todoServiceMock).should(times(2)).deleteTodo(stringArgumentCaptor.capture());
+
+    assertThat(stringArgumentCaptor.getAllValues().size(), is(2));
+
+    final List<String> deletedEntries = Arrays.asList("Learn Java", "Learn Unit Test");
+    assertThat(stringArgumentCaptor.getAllValues(), is(deletedEntries));
   }
 
 }
