@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import com.in28minutes.data.api.TodoService;
@@ -110,6 +111,24 @@ public class TodoBusinessImplMockTest {
 //    then(todoServiceMock).should(times(1)).deleteTodo("Learn Unit Test");
 //    then(todoServiceMock).should(atLeast(5)).deleteTodo("Learn Unit Test");
     then(todoServiceMock).should(never()).deleteTodo("Learn Spring MVC");
+  }
+
+  @Test
+  public void testDeleteTodosNotRelatingToSpring_usingBDD_argumentCapture() {
+    final ArgumentCaptor<String> stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
+
+    final List<String> allTodos = Arrays.asList("Learn Spring MVC", "Learn Spring", "Learn Unit Test");
+
+    // given
+    given(todoServiceMock.retrieveTodos("DummyUser")).willReturn(allTodos);
+
+    // when
+    todoBusinessImpl.deleteTodosNotRelatingToSpring("DummyUser");
+
+    // then
+    then(todoServiceMock).should().deleteTodo(stringArgumentCaptor.capture());
+
+    assertThat(stringArgumentCaptor.getValue(), is("Learn Unit Test"));
   }
 
 }
