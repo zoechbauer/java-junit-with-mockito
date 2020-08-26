@@ -14,21 +14,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import com.in28minutes.data.api.TodoService;
 
 // see original version in TodoBusinessImplMockTest without Mockito Annotations
+// only 1 @RunWith but more than 1 @Rule Annotations are allowed => prefere @Rule over @RunWith
 
-@RunWith(MockitoJUnitRunner.class)
 public class TodoBusinessImplMockitoInjectMocksTest {
+  @Rule
+  public MockitoRule MockitoRule = MockitoJUnit.rule();
+
   @Mock
   private TodoService todoServiceMock;
 
