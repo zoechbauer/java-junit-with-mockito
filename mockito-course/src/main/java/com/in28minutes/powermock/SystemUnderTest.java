@@ -24,4 +24,17 @@ public class SystemUnderTest {
     }
     return UtilityClass.staticMethod(sum);
   }
+
+  public String callPrivateMethodUnderTest() {
+    return "Result of Stats = " + privateMethodUnderTest();
+  }
+
+  private long privateMethodUnderTest() {
+    final List<Integer> stats = dependency.retrieveAllStats();
+    long sum = 0;
+    for (final int stat : stats) {
+      sum += stat;
+    }
+    return sum;
+  }
 }
